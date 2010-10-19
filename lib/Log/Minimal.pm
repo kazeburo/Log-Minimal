@@ -97,13 +97,14 @@ Log::Minimal - Minimal Logger
 
   use Log::Minimal;
 
-  critf("%s","foo");
+  critf("%s","foo"); # 2010-10-20T00:25:17 [CRITICAL] foo at example.pl line 12
   warnf("%d %s", 1, "foo");
   infof("foo");
   debugf("foo"); print if $ENV{LM_DEBUG} is true
 
   # with full stack trace
   critff("%s","foo");
+  # 2010-10-20T00:25:17 [CRITICAL] foo at lib/Example.pm line 10, example.pl line 12
   warnff("%d %s", 1, "foo");
   infoff("foo");
   debugff("foo"); print if $ENV{LM_DEBUG} is true
@@ -118,7 +119,7 @@ To change output log method, define $Log::Minimal::PRINT.
 
   local $Log::Minimal::PRINT = sub {
       my ( $time, $type, $message, $trace) = @_;
-      print STDERR "$time $type $message $trace\n";
+      print STDERR "$time [$ENV{SCRIPT_NAME}] $type $message $trace\n";
   };
 
 default
