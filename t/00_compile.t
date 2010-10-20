@@ -7,9 +7,9 @@ use Log::Minimal;
 
 {
     local $Log::Minimal::PRINT = sub { join(" ", @_) };
-    like( critf("crit"), qr/crit/ );
+    like( critf("crit%d", 1), qr/crit1/ );
     like( warnf("warn"), qr/warn/ );
-    like( infof("info"), qr/info/ );
+    like( infof('in%fo'), qr/in%fo/ );
     ok( !debugf("debug") );
     local $ENV{LM_DEBUG} = 1;
     like( debugf("debug"), qr/debug/ );
@@ -17,9 +17,9 @@ use Log::Minimal;
 
 {
     local $Log::Minimal::PRINT = sub { join(" ", @_) };
-    like( critff("crit"), qr/crit/ );
+    like( critff("crit%d",1), qr/crit1/ );
     like( warnff("warn"), qr/warn/ );
-    like( infoff("info"), qr/info/ );
+    like( infoff('in%fo'), qr/in%fo/ );
     ok( !debugff("debug") );
     local $ENV{LM_DEBUG} = 1;
     like( debugff("debug"), qr/debug/ );

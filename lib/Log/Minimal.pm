@@ -10,37 +10,37 @@ our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
 our $PRINT = sub { warn join(" ",@_) . "\n" };
 
 sub critf {
-    _log( "CRITICAL", 0, sprintf shift, @_ );
+    _log( "CRITICAL", 0, @_ );
 }
 
 sub warnf {
-    _log( "WARN", 0, sprintf shift, @_ );
+    _log( "WARN", 0, @_ );
 }
 
 sub infof {
-    _log( "INFO", 0, sprintf shift, @_ );
+    _log( "INFO", 0, @_ );
 }
 
 sub debugf {
     return unless $ENV{LM_DEBUG};
-    _log( "DEBUG", 0, sprintf shift, @_ );
+    _log( "DEBUG", 0, @_ );
 }
 
 sub critff {
-    _log( "CRITICAL", 1, sprintf shift, @_ );
+    _log( "CRITICAL", 1, @_ );
 }
 
 sub warnff {
-    _log( "WARN", 1, sprintf shift, @_ );
+    _log( "WARN", 1, @_ );
 }
 
 sub infoff {
-    _log( "INFO", 1, sprintf shift, @_ );
+    _log( "INFO", 1, @_ );
 }
 
 sub debugff {
     return unless $ENV{LM_DEBUG};
-    _log( "DEBUG", 1, sprintf shift, @_ );
+    _log( "DEBUG", 1, @_ );
 }
 
 sub _log {
@@ -70,17 +70,20 @@ sub _log {
         $trace = "$caller[1] line $caller[2]";
     }
 
-    my @messages;
-    foreach ( @_ ) {
-        my $message = $_; # avoid Modification of a read-only value
-        $message =~ s![\n\r]!!g;
-        push @messages, $message;
+    my $messages = '';
+    if ( @_ == 1 && defined $_[0]) {
+        $messages = $_[0];
     }
+    elsif ( @_ >= 2 )  {
+        $messages = sprintf shift, @_;
+    }
+
+    $messages =~ s![\n\r]!!g;
 
     $PRINT->(
         $time,
         "[$tag]",
-        join(" ", @messages),
+        $messages,
         "at $trace"
     );
 }
