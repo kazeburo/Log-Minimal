@@ -7,7 +7,10 @@ use base qw/Exporter/;
 our $VERSION = '0.01';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
 
-our $PRINT = sub { warn join(" ",@_) . "\n" };
+our $PRINT = sub {
+    my ( $time, $type, $message, $trace) = @_;
+    warn "$time [$type] $message at $trace\n";
+};
 
 sub critf {
     _log( "CRITICAL", 0, @_ );
@@ -82,9 +85,9 @@ sub _log {
 
     $PRINT->(
         $time,
-        "[$tag]",
+        $tag,
         $messages,
-        "at $trace"
+        $trace
     );
 }
 
@@ -120,14 +123,21 @@ Log::Minimal is Minimal Log module.
 
 To change output log method, define $Log::Minimal::PRINT.
 
-  local $Log::Minimal::PRINT = sub {
-      my ( $time, $type, $message, $trace) = @_;
-      print STDERR "$time [$ENV{SCRIPT_NAME}] $type $message $trace\n";
-  };
+  my $app = sub {
+      my $env = shift;
+      local $Log::Minimal::PRINT = sub {
+          my ( $time, $type, $message, $trace) = @_;
+          $env->{psgi.errors}->print(
+              "$time [$env->{SCRIPT_NAME}] [$type] $message at $trace\n");
+      };
+  }
 
 default
 
-  sub { warn join(" ", @_) . "\n" }
+  sub {
+    my ( $time, $type, $message, $trace) = @_;
+    warn "$time [$type] $message at $trace\n";
+  }
 
 =head1 AUTHOR
 
