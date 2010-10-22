@@ -97,7 +97,7 @@ __END__
 
 =head1 NAME
 
-Log::Minimal - Minimal Logger
+Log::Minimal - Minimal but customizable logger.
 
 =head1 SYNOPSIS
 
@@ -125,7 +125,12 @@ Log::Minimal is Minimal but customizable log module.
 
 =item critf(($message:Str|$format:Str,@list:Array));
 
+  critf("could't connect to example.com");
+  critf("Connection timeout timeout:%d, host:%s", 2, "example.com");
+
 Display CRITICAL messages.
+When two or more arguments are passed to the function, 
+the first argument is treated as a format of printf. 
 
 =item warnf(($message:Str|$format:Str,@list:Array));
 
@@ -133,27 +138,30 @@ Display WARN messages.
 
 =item infof(($message:Str|$format:Str,@list:Array));
 
-Display INFO messages
+Display INFO messages.
 
 =item debugf(($message:Str|$format:Str,@list:Array));
 
-Display DEBUG messages, if $ENV{LM_DEBUG} is true
+Display DEBUG messages, if $ENV{LM_DEBUG} is true.
 
 =item critff(($message:Str|$format:Str,@list:Array));
 
-Display CRITICAL messages with stacktrace.
+  critff("could't connect to example.com");
+  critff("Connection timeout timeout:%d, host:%s", 2, "example.com");
+
+Display CRITICAL messages with stack trace.
 
 =item warnff(($message:Str|$format:Str,@list:Array));
 
-Display WARN messages with stacktrace.
+Display WARN messages with stack trace.
 
 =item infoff(($message:Str|$format:Str,@list:Array));
 
-Display INFO messages with stacktrace.
+Display INFO messages with stack trace.
 
 =item debugff(($message:Str|$format:Str,@list:Array));
 
-Display DEBUG messages with stacktrace, if $ENV{LM_DEBUG} is true.
+Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
 
 =back
 
@@ -161,7 +169,7 @@ Display DEBUG messages with stacktrace, if $ENV{LM_DEBUG} is true.
 
 To customize the method of outputting the log, set $Log::Minimal::PRINT.
 
-  # with PSGI Application
+  # with PSGI Application. output log with request uri.
   my $app = sub {
       my $env = shift;
       local $Log::Minimal::PRINT = sub {
