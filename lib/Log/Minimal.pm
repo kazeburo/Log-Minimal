@@ -12,6 +12,8 @@ our $PRINT = sub {
     warn "$time [$type] $message at $trace\n";
 };
 
+our $ENV_DEBUG = "LM_DEBUG";
+
 sub critf {
     _log( "CRITICAL", 0, @_ );
 }
@@ -25,7 +27,7 @@ sub infof {
 }
 
 sub debugf {
-    return unless $ENV{LM_DEBUG};
+    return unless $ENV{$ENV_DEBUG};
     _log( "DEBUG", 0, @_ );
 }
 
@@ -42,7 +44,7 @@ sub infoff {
 }
 
 sub debugff {
-    return unless $ENV{LM_DEBUG};
+    return unless $ENV{$ENV_DEBUG};
     _log( "DEBUG", 1, @_ );
 }
 
