@@ -117,12 +117,51 @@ Log::Minimal - Minimal Logger
 
 =head1 DESCRIPTION
 
-Log::Minimal is Minimal Log module.
+Log::Minimal is Minimal but customizable log module.
+
+=head1 EXPORT FUNCTIONS
+
+=over 4
+
+=item critf(($message:Str|$format:Str,@list:Array));
+
+Display CRITICAL messages.
+
+=item warnf(($message:Str|$format:Str,@list:Array));
+
+Display WARN messages.
+
+=item infof(($message:Str|$format:Str,@list:Array));
+
+Display INFO messages
+
+=item debugf(($message:Str|$format:Str,@list:Array));
+
+Display DEBUG messages, if $ENV{LM_DEBUG} is true
+
+=item critff(($message:Str|$format:Str,@list:Array));
+
+Display CRITICAL messages with stacktrace.
+
+=item warnff(($message:Str|$format:Str,@list:Array));
+
+Display WARN messages with stacktrace.
+
+=item infoff(($message:Str|$format:Str,@list:Array));
+
+Display INFO messages with stacktrace.
+
+=item debugff(($message:Str|$format:Str,@list:Array));
+
+Display DEBUG messages with stacktrace, if $ENV{LM_DEBUG} is true.
+
+=back
 
 =head1 CUSTOMIZE
 
-To change output log method, define $Log::Minimal::PRINT.
+To customize the method of outputting the log, set $Log::Minimal::PRINT.
 
+  # with PSGI Application
   my $app = sub {
       my $env = shift;
       local $Log::Minimal::PRINT = sub {
@@ -130,6 +169,7 @@ To change output log method, define $Log::Minimal::PRINT.
           $env->{psgi.errors}->print(
               "$time [$env->{SCRIPT_NAME}] [$type] $message at $trace\n");
       };
+      run_app(...);
   }
 
 default
