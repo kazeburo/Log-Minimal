@@ -181,6 +181,10 @@ Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
 
 =head1 CUSTOMIZE
 
+=over 4
+
+=item $Log::Minimal::PRINT
+
 To customize the method of outputting the log, set $Log::Minimal::PRINT.
 
   # with PSGI Application. output log with request uri.
@@ -201,9 +205,26 @@ default
     warn "$time [$type] $message at $trace\n";
   }
 
+=item $Log::Minimal::LOG_LEVEL
+
+Set level to output log.
+
+  local $Log::Minimal::LOG_LEVEL = "WARN";
+  infof("foo"); #print nothing
+  warnf("foo");
+
+Support levels are DEBUG,INFO,WARN,CRITICAL and NONE.
+If NONE is set, no output. Default log level is DEBUG.
+
+=back
+
 =head1 AUTHOR
 
 Masahiro Nagano E<lt>kazeburo {at} gmail.comE<gt>
+
+=head1 THANKS TO
+
+Yuji Shimada (xaicron)
 
 =head1 SEE ALSO
 
