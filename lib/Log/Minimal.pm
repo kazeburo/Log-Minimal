@@ -16,11 +16,11 @@ our $ENV_DEBUG = "LM_DEBUG";
 
 our $LOG_LEVEL = 'DEBUG';
 my %log_level_map = (
-    DEBUG    => 0b1111,
-    INFO     => 0b0111,
-    WARN     => 0b0011,
-    CRITICAL => 0b0001,
-    NONE     => 0b0000,
+    DEBUG    => 1,
+    INFO     => 2,
+    WARN     => 3,
+    CRITICAL => 4,
+    MUTE     => 0,
 );
 
 sub critf {
@@ -36,8 +36,7 @@ sub infof {
 }
 
 sub debugf {
-    return unless $ENV{$ENV_DEBUG} ||
-        ($log_level_map{uc $LOG_LEVEL} | $log_level_map{DEBUG}) == $log_level_map{DEBUG};
+    return unless $ENV{$ENV_DEBUG} || $log_level_map{DEBUG} >= $log_level_map{uc $LOG_LEVEL};
     _log( "DEBUG", 0, @_ );
 }
 
@@ -54,8 +53,7 @@ sub infoff {
 }
 
 sub debugff {
-    return unless $ENV{$ENV_DEBUG} ||
-        ($log_level_map{uc $LOG_LEVEL} | $log_level_map{DEBUG}) == $log_level_map{DEBUG};
+    return unless $ENV{$ENV_DEBUG} || $log_level_map{DEBUG} >= $log_level_map{uc $LOG_LEVEL};
     _log( "DEBUG", 1, @_ );
 }
 
@@ -64,7 +62,7 @@ sub _log {
     my $full = shift;
 
     my $_log_level = $log_level_map{uc $LOG_LEVEL} || return;
-    return unless ( ($_log_level | $log_level_map{$tag}) == $_log_level );
+    return unless $log_level_map{$tag} >= $_log_level;
 
     my ( $sec, $min, $hour, $mday, $mon, $year, $wday, $yday, $isdst ) =
       localtime(time);
