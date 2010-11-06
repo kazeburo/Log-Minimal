@@ -36,7 +36,7 @@ sub infof {
 }
 
 sub debugf {
-    return unless $ENV{$ENV_DEBUG} || $log_level_map{DEBUG} >= $log_level_map{uc $LOG_LEVEL};
+    return if !$ENV{$ENV_DEBUG} || $log_level_map{DEBUG} < $log_level_map{uc $LOG_LEVEL};
     _log( "DEBUG", 0, @_ );
 }
 
@@ -53,7 +53,7 @@ sub infoff {
 }
 
 sub debugff {
-    return unless $ENV{$ENV_DEBUG} || $log_level_map{DEBUG} >= $log_level_map{uc $LOG_LEVEL};
+    return if !$ENV{$ENV_DEBUG} || $log_level_map{DEBUG} < $log_level_map{uc $LOG_LEVEL};
     _log( "DEBUG", 1, @_ );
 }
 
@@ -179,13 +179,18 @@ Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
 
 =back
 
+=head1 ENVIRONMENT
+
+To print debugf and debugff messages, $ENV{LM_DEBUG} must be true.
+
+
 =head1 CUSTOMIZE
 
 =over 4
 
 =item $Log::Minimal::PRINT
 
-To customize the method of outputting the log, set $Log::Minimal::PRINT.
+To change the method of outputting the log, set $Log::Minimal::PRINT.
 
   # with PSGI Application. output log with request uri.
   my $app = sub {
@@ -198,7 +203,7 @@ To customize the method of outputting the log, set $Log::Minimal::PRINT.
       run_app(...);
   }
 
-default
+default is
 
   sub {
     my ( $time, $type, $message, $trace) = @_;

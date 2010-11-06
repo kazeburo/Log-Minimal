@@ -1,5 +1,5 @@
 use strict;
-use Test::More tests => 11;
+use Test::More;
 
 BEGIN { use_ok 'Log::Minimal' }
 
@@ -24,4 +24,43 @@ use Log::Minimal;
     local $ENV{LM_DEBUG} = 1;
     like( debugff("debug"), qr/debug/ );
 }
+
+
+{
+    local $Log::Minimal::PRINT = sub { join( "", @_) };
+    local $Log::Minimal::LOG_LEVEL = "MUTE";
+    ok( ! critf("crit") );
+
+    local $Log::Minimal::LOG_LEVEL = "CRITICAL";
+    ok( critf("crit") );
+    ok( ! warnf("warn") );
+
+    local $Log::Minimal::LOG_LEVEL = "WARN";
+    ok( critf("crit") );
+    ok( warnf("warn") );
+    ok( !debugf("debug") );
+
+    local $Log::Minimal::LOG_LEVEL = "INFO";
+    ok( critf("crit") );
+    ok( warnf("warn") );
+    ok( infof("info") );
+    ok( !debugf("debug") );
+
+    local $Log::Minimal::LOG_LEVEL = "DEBUG";
+    ok( !debugf("debug") );
+
+    local $ENV{LM_DEBUG} = 1;
+    ok( debugf("debug") );
+
+    local $Log::Minimal::LOG_LEVEL = "INFO";
+    ok( !debugf("debug") );
+
+    local $Log::Minimal::LOG_LEVEL = "DEBUG";
+    ok( debugf("debug") );
+
+    local $Log::Minimal::LOG_LEVEL = "MUTE";
+    ok( !debugf("debug") );
+}
+
+done_testing();
 

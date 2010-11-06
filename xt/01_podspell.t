@@ -8,3 +8,7 @@ __DATA__
 Masahiro Nagano
 kazeburo {at} gmail.com
 Log::Minimal
+Shimada
+Yuji
+xaicron
+
