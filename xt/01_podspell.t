@@ -11,4 +11,5 @@ Log::Minimal
 Shimada
 Yuji
 xaicron
-
+debugf
+debugff
