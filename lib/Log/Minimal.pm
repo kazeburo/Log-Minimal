@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Exporter/;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
 
 our $PRINT = sub {
