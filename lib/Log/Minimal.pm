@@ -3,9 +3,11 @@ package Log::Minimal;
 use strict;
 use warnings;
 use base qw/Exporter/;
+use Data::Dumper;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
+push @EXPORT, 'ddd';
 
 our $PRINT = sub {
     my ( $time, $type, $message, $trace) = @_;
@@ -92,10 +94,12 @@ sub _log {
         $messages = $_[0];
     }
     elsif ( @_ >= 2 )  {
-        $messages = sprintf shift, @_;
+        $messages = sprintf(shift, @_);
     }
 
-    $messages =~ s![\n\r]!!g;
+    $messages =~ s/\x0d/\\r/g;
+    $messages =~ s/\x0a/\\n/g;
+    $messages =~ s/\x09/\\t/g;
 
     $PRINT->(
         $time,
@@ -104,6 +108,17 @@ sub _log {
         $trace
     );
 }
+
+sub ddd {
+    my $value = shift;
+    if ( defined $value && ref($value) ) {
+        local $Data::Dumper::Terse = 1;
+        local $Data::Dumper::Indent = 0;
+        $value = Data::Dumper::Dumper($value);
+    }
+    $value;
+}
+
 
 
 1;
@@ -176,6 +191,13 @@ Display INFO messages with stack trace.
 =item debugff(($message:Str|$format:Str,@list:Array));
 
 Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
+
+=item ddd($value:Any)
+
+Utility method that serializes given value with Data::Dumper;
+
+  warnf( "dump is %s, another dump is %s", ddd($hashref), ddd($arrayref) );
+
 
 =back
 

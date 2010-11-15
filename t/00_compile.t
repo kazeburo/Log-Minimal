@@ -12,7 +12,7 @@ use Log::Minimal;
     like( infof('in%fo'), qr/in%fo/ );
     ok( !debugf("debug") );
     local $ENV{LM_DEBUG} = 1;
-    like( debugf("debug"), qr/debug/ );
+    like( debugf("debu\t\r\ng"), qr/debu\\t\\r\\ng/ );
 }
 
 {
@@ -22,7 +22,13 @@ use Log::Minimal;
     like( infoff('in%fo'), qr/in%fo/ );
     ok( !debugff("debug") );
     local $ENV{LM_DEBUG} = 1;
-    like( debugff("debug"), qr/debug/ );
+    like( debugff("debu\t\r\ng"), qr/debu\\t\\r\\ng/ );
+}
+
+
+{
+    like( ddd(\"foo"), qr/\\'foo'/ );
+    like( ddd("foo\r\nbar"), qr/foo\r\nbar/ );   
 }
 
 
