@@ -7,7 +7,7 @@ use Data::Dumper;
 
 our $VERSION = '0.03';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
-push @EXPORT, 'ddd';
+push @EXPORT, 'ddf';
 
 our $PRINT = sub {
     my ( $time, $type, $message, $trace) = @_;
@@ -109,7 +109,7 @@ sub _log {
     );
 }
 
-sub ddd {
+sub ddf {
     my $value = shift;
     if ( defined $value && ref($value) ) {
         local $Data::Dumper::Terse = 1;
@@ -144,7 +144,7 @@ Log::Minimal - Minimal but customizable logger.
   infoff("foo");
   debugff("foo"); print if $ENV{LM_DEBUG} is true
 
-  my $serialize = ddd({ 'key' => 'value' });
+  my $serialize = ddf({ 'key' => 'value' });
 
 =head1 DESCRIPTION
 
@@ -194,11 +194,11 @@ Display INFO messages with stack trace.
 
 Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
 
-=item ddd($value:Any)
+=item ddf($value:Any)
 
 Utility method that serializes given value with Data::Dumper;
 
-  warnf( "dump is %s, another dump is %s", ddd($hashref), ddd($arrayref) );
+  warnf( "dump is %s, another dump is %s", ddf($hashref), ddf($arrayref) );
 
 
 =back

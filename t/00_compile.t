@@ -27,8 +27,8 @@ use Log::Minimal;
 
 
 {
-    like( ddd(\"foo"), qr/\\'foo'/ );
-    like( ddd("foo\r\nbar"), qr/foo\r\nbar/ );   
+    like( ddf(\"foo"), qr/\\'foo'/ );
+    like( ddf("foo\r\nbar"), qr/foo\r\nbar/ );   
 }
 
 

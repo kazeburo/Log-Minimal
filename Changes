@@ -1,7 +1,7 @@
 Revision history for Perl extension Log::Minimal
 
 0.03    Mon Nov 15 12:29:24 2010
-        - added "ddd" that serializes objects and references
+        - added "ddf" that serializes objects and references
 
 0.02    Fri Nov 05 23:28:55 2010
         - supported log_level (xaicron)
