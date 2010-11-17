@@ -144,6 +144,8 @@ Log::Minimal - Minimal but customizable logger.
   infoff("foo");
   debugff("foo"); print if $ENV{LM_DEBUG} is true
 
+  my $serialize = ddd({ 'key' => 'value' });
+
 =head1 DESCRIPTION
 
 Log::Minimal is Minimal but customizable log module.
