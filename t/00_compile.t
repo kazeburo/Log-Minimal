@@ -64,6 +64,7 @@ use Log::Minimal;
 
 
     local $Log::Minimal::PRINT = sub { join(" ", @_) };
+    local $Log::Minimal::AUTODUMP = 1;
     my $ol = OLObj->new("foo");
     like( warnf("%s",$ol), qr/"foo"/);
     like( warnf( $ol ), qr/"foo"/);

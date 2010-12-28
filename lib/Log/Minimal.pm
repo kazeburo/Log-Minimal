@@ -14,7 +14,7 @@ our $PRINT = sub {
 };
 
 our $ENV_DEBUG = "LM_DEBUG";
-
+our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
 my %log_level_map = (
     DEBUG    => 1,
@@ -90,10 +90,10 @@ sub _log {
 
     my $messages = '';
     if ( @_ == 1 && defined $_[0]) {
-        $messages = Log::Minimal::Dumper->new($_[0]);
+        $messages = $AUTODUMP ? Log::Minimal::Dumper->new($_[0]) : $_[0];
     }
     elsif ( @_ >= 2 )  {
-        $messages = sprintf(shift, map { Log::Minimal::Dumper->new($_) } @_);
+        $messages = sprintf(shift, map { $AUTODUMP ? Log::Minimal::Dumper->new($_) : $_ } @_);
     }
 
     $messages =~ s/\x0d/\\r/g;
@@ -179,14 +179,14 @@ Log::Minimal - Minimal but customizable logger.
 
   critf("%s","foo"); # 2010-10-20T00:25:17 [CRITICAL] foo at example.pl line 12
   warnf("%d %s %s", 1, "foo", $uri);
-  infof({ 'key' => 'value' });
+  infof('foo');
   debugf("foo"); print if $ENV{LM_DEBUG} is true
 
   # with full stack trace
   critff("%s","foo");
   # 2010-10-20T00:25:17 [CRITICAL] foo at lib/Example.pm line 10, example.pl line 12
   warnff("%d %s %s", 1, "foo", $uri);
-  infoff({ 'key' => 'value' });
+  infoff('foo');
   debugff("foo"); print if $ENV{LM_DEBUG} is true
 
   my $serialize = ddf({ 'key' => 'value' });
@@ -208,7 +208,11 @@ Display CRITICAL messages.
 When two or more arguments are passed to the function, 
 the first argument is treated as a format of printf. 
 
-If message is reference or object, Log::Minimal serializes it with 
+  local $Log::Minimal::AUTODUMP = 1;
+  critf({ foo => 'bar' });
+  critf("dump is %s", { foo => 'bar' });
+
+If $Log::Minimal::AUTODUMP is true, message that is reference or object is serialized with 
 Data::Dumper automatically.
 
 =item warnf(($message:Str|$format:Str,@list:Array));
@@ -292,6 +296,21 @@ Set level to output log.
 
 Support levels are DEBUG,INFO,WARN,CRITICAL and NONE.
 If NONE is set, no output. Default log level is DEBUG.
+
+=item $Log::Minimal::AUTODUMP
+
+Serialize message with Data::Dumper.
+
+  warnf("%s",{ foo => bar}); # HASH(0x100804ed0)
+
+  local $Log::Minimal::AUTODUMP = 1;
+  warnf("dump is %s", {foo=>'bar'}); #dump is {foo=>'bar'}
+
+  my $uri = URI->new("http://search.cpan.org/");
+  warnf("uri: '%s'", $uri); # uri: 'http://search.cpan.org/'
+
+If message is object and has overload methods like '""' or '0+', 
+Log::Minimal uses it instead of Data::Dumper.
 
 =back
 
