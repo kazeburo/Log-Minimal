@@ -149,7 +149,7 @@ sub numeric {
     if ( blessed($value) && (my $numeric = overload::Method( $value, '0+' ) || overload::Method( $value, '""' )) ) {
         $value = $numeric->($value);
     }
-    dumper($value);
+    $value;
 }
 
 sub dumper {
@@ -161,9 +161,6 @@ sub dumper {
     }
     $value;
 }
-
-1;
-
 
 
 1;
@@ -212,7 +209,7 @@ the first argument is treated as a format of printf.
   critf({ foo => 'bar' });
   critf("dump is %s", { foo => 'bar' });
 
-If $Log::Minimal::AUTODUMP is true, message that is reference or object is serialized with 
+If $Log::Minimal::AUTODUMP is true, reference or object message is serialized with 
 Data::Dumper automatically.
 
 =item warnf(($message:Str|$format:Str,@list:Array));
