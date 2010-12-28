@@ -1,4 +1,36 @@
+
 use strict;
+
+package OLObj;
+
+use overload
+    '0+' => \&numelic,
+    '""' => \&stringfy;
+
+sub new {
+    my ($class, $value) = @_;
+    bless \$value, $class;
+};
+
+sub numelic {
+    my $self = shift;
+    $$self;
+}
+
+sub stringfy {
+    my $self = shift;
+    qq!"$$self"!;
+}
+
+package Foo;
+
+sub new {
+    my ($class, $value) = @_;
+    bless \$value, $class;
+};
+
+package main;
+
 use Test::More;
 
 BEGIN { use_ok 'Log::Minimal' }
@@ -28,7 +60,17 @@ use Log::Minimal;
 
 {
     like( ddf(\"foo"), qr/\\'foo'/ );
-    like( ddf("foo\r\nbar"), qr/foo\r\nbar/ );   
+    like( ddf("foo\r\nbar"), qr/foo\r\nbar/ );
+
+
+    local $Log::Minimal::PRINT = sub { join(" ", @_) };
+    my $ol = OLObj->new("foo");
+    like( warnf("%s",$ol), qr/"foo"/);
+    like( warnf( $ol ), qr/"foo"/);
+    my $ol2 = OLObj->new(200);
+    like( warnf("%f",$ol2), qr/200\.00/);
+    my $foo = Foo->new("foo");
+    like( warnf($foo), qr/bless.+foo.+Foo/);
 }
 
 

@@ -1,5 +1,8 @@
 Revision history for Perl extension Log::Minimal
 
+0.04    Tue Dec 28 18:59:00 2010
+        - serialize messages automatically 
+
 0.03    Mon Nov 15 12:29:24 2010
         - added "ddf" that serializes objects and references
 

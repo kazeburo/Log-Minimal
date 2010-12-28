@@ -3,9 +3,8 @@ package Log::Minimal;
 use strict;
 use warnings;
 use base qw/Exporter/;
-use Data::Dumper;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
 push @EXPORT, 'ddf';
 
@@ -91,10 +90,10 @@ sub _log {
 
     my $messages = '';
     if ( @_ == 1 && defined $_[0]) {
-        $messages = $_[0];
+        $messages = Log::Minimal::Dumper->new($_[0]);
     }
     elsif ( @_ >= 2 )  {
-        $messages = sprintf(shift, @_);
+        $messages = sprintf(shift, map { Log::Minimal::Dumper->new($_) } @_);
     }
 
     $messages =~ s/\x0d/\\r/g;
@@ -111,13 +110,59 @@ sub _log {
 
 sub ddf {
     my $value = shift;
+    Log::Minimal::Dumper::dumper($value);
+}
+
+1;
+
+package
+    Log::Minimal::Dumper;
+
+use strict;
+use warnings;
+use base qw/Exporter/;
+use Data::Dumper;
+use Scalar::Util qw/blessed/;
+
+use overload
+    '""' => \&stringfy,
+    '0+' => \&numeric,
+    fallback => 1;
+
+sub new {
+    my ($class, $value) = @_;
+    bless \$value, $class;
+}
+
+sub stringfy {
+    my $self = shift;
+    my $value = $$self;
+    if ( blessed($value) && (my $stringify = overload::Method( $value, '""' ) || overload::Method( $value, '0+' )) ) {
+        $value = $stringify->($value);
+    }
+    dumper($value);
+}
+
+sub numeric {
+    my $self = shift;
+    my $value = $$self;
+    if ( blessed($value) && (my $numeric = overload::Method( $value, '0+' ) || overload::Method( $value, '""' )) ) {
+        $value = $numeric->($value);
+    }
+    dumper($value);
+}
+
+sub dumper {
+    my $value = shift;
     if ( defined $value && ref($value) ) {
         local $Data::Dumper::Terse = 1;
-        local $Data::Dumper::Indent = 0;
+        local $Data::Dumper::Indent = 0; 
         $value = Data::Dumper::Dumper($value);
     }
     $value;
 }
+
+1;
 
 
 
@@ -133,15 +178,15 @@ Log::Minimal - Minimal but customizable logger.
   use Log::Minimal;
 
   critf("%s","foo"); # 2010-10-20T00:25:17 [CRITICAL] foo at example.pl line 12
-  warnf("%d %s", 1, "foo");
-  infof("foo");
+  warnf("%d %s %s", 1, "foo", $uri);
+  infof({ 'key' => 'value' });
   debugf("foo"); print if $ENV{LM_DEBUG} is true
 
   # with full stack trace
   critff("%s","foo");
   # 2010-10-20T00:25:17 [CRITICAL] foo at lib/Example.pm line 10, example.pl line 12
-  warnff("%d %s", 1, "foo");
-  infoff("foo");
+  warnff("%d %s %s", 1, "foo", $uri);
+  infoff({ 'key' => 'value' });
   debugff("foo"); print if $ENV{LM_DEBUG} is true
 
   my $serialize = ddf({ 'key' => 'value' });
@@ -162,6 +207,9 @@ Log::Minimal is Minimal but customizable log module.
 Display CRITICAL messages.
 When two or more arguments are passed to the function, 
 the first argument is treated as a format of printf. 
+
+If message is reference or object, Log::Minimal serializes it with 
+Data::Dumper automatically.
 
 =item warnf(($message:Str|$format:Str,@list:Array));
 
@@ -198,7 +246,7 @@ Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
 
 Utility method that serializes given value with Data::Dumper;
 
-  warnf( "dump is %s, another dump is %s", ddf($hashref), ddf($arrayref) );
+ my $serialize = ddf($hashref);
 
 
 =back
