@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Exporter/;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
 push @EXPORT, 'ddf';
 
@@ -16,6 +16,8 @@ our $PRINT = sub {
 our $ENV_DEBUG = "LM_DEBUG";
 our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
+our $TRACE_LEVEL = 0;
+
 my %log_level_map = (
     DEBUG    => 1,
     INFO     => 2,
@@ -75,7 +77,7 @@ sub _log {
 
     my $trace;
     if ( $full ) {
-        my $i=1;
+        my $i=$TRACE_LEVEL+1;
         my @stack;
         while ( my @caller = caller($i) ) {
             push @stack, "$caller[1] line $caller[2]";
@@ -84,7 +86,7 @@ sub _log {
         $trace = join " ,", @stack
     }
     else {
-        my @caller = caller(1);
+        my @caller = caller($TRACE_LEVEL+1);
         $trace = "$caller[1] line $caller[2]";
     }
 
@@ -308,6 +310,11 @@ Serialize message with Data::Dumper.
 
 If message is object and has overload methods like '""' or '0+', 
 Log::Minimal uses it instead of Data::Dumper.
+
+=item $Log::Minimal::TRACE_LEVEL
+
+Like a $Carp::CarpLevel, this variable determines how many additional call frames are to be skipped.
+Defaults to 0.
 
 =back
 

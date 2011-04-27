@@ -57,6 +57,15 @@ use Log::Minimal;
     like( debugff("debu\t\r\ng"), qr/debu\\t\\r\\ng/ );
 }
 
+use t::LogTest;
+
+{
+    local $Log::Minimal::PRINT = sub { join(" ", @_) };
+    like t::LogTest::logtest("crit%d",1), qr/LogTest\.pm/;
+
+    local $Log::Minimal::TRACE_LEVEL = $Log::Minimal::TRACE_LEVEL + 1;
+    unlike t::LogTest::logtest("crit%d",1), qr/LogTest\.pm/;
+}
 
 {
     like( ddf(\"foo"), qr/\\'foo'/ );

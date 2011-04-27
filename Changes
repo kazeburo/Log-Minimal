@@ -1,5 +1,8 @@
 Revision history for Perl extension Log::Minimal
 
+0.05    Wed 27 16:52:17 2011
+        - added $Log::Minimal::TRACE_LEVEL like a $Carp::CarpLevel
+
 0.04    Tue Dec 28 18:59:00 2010
         - serialize messages automatically 
 
