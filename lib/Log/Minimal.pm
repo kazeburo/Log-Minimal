@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use base qw/Exporter/;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
 push @EXPORT, 'ddf';
 
@@ -92,7 +92,7 @@ sub _log {
 
     my $messages = '';
     if ( @_ == 1 && defined $_[0]) {
-        $messages = $AUTODUMP ? Log::Minimal::Dumper->new($_[0]) : $_[0];
+        $messages = $AUTODUMP ? ''.Log::Minimal::Dumper->new($_[0]) : $_[0];
     }
     elsif ( @_ >= 2 )  {
         $messages = sprintf(shift, map { $AUTODUMP ? Log::Minimal::Dumper->new($_) : $_ } @_);
