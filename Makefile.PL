@@ -3,6 +3,7 @@ name 'Log-Minimal';
 all_from 'lib/Log/Minimal.pm';
 
 requires 'Data::Dumper';
+requires 'Term::ANSIColor';
 requires 'Scalar::Util';
 
 tests 't/*.t';

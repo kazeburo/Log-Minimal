@@ -1,5 +1,9 @@
 Revision history for Perl extension Log::Minimal
 
+0.08    Fri Jun 10 17:23:07 2011
+        - no code changes
+        - requires Term::ANSIColor
+
 0.07    Fri Jun 10 17:10:03 2011
         - colorful log
 	- added croakf and croakff
