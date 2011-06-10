@@ -5,7 +5,7 @@ use warnings;
 use base qw/Exporter/;
 
 our $VERSION = '0.06';
-our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug/;
+our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug croak/;
 push @EXPORT, 'ddf';
 
 our $PRINT = sub {
@@ -24,6 +24,7 @@ my %log_level_map = (
     WARN     => 3,
     CRITICAL => 4,
     MUTE     => 0,
+    ERROR    => 99,
 );
 
 sub critf {
@@ -58,6 +59,22 @@ sub infoff {
 sub debugff {
     return if !$ENV{$ENV_DEBUG} || $log_level_map{DEBUG} < $log_level_map{uc $LOG_LEVEL};
     _log( "DEBUG", 1, @_ );
+}
+
+sub croakf {
+    local $PRINT = sub {
+        my ( $time, $type, $message, $trace) = @_;
+        die "$time [$type] $message at $trace\n";
+    };  
+    _log( "ERROR", 0, @_ );
+}
+
+sub croakff {
+    local $PRINT = sub {
+        my ( $time, $type, $message, $trace) = @_;
+        die "$time [$type] $message at $trace\n";
+    };
+    _log( "ERROR", 1, @_ );
 }
 
 sub _log {
@@ -190,6 +207,10 @@ Log::Minimal - Minimal but customizable logger.
 
   my $serialize = ddf({ 'key' => 'value' });
 
+  # die with formatted message
+  croakf('foo');
+  croakff('%s %s', $code, $message);
+
 =head1 DESCRIPTION
 
 Log::Minimal is Minimal but customizable log module.
@@ -244,6 +265,17 @@ Display INFO messages with stack trace.
 =item debugff(($message:Str|$format:Str,@list:Array));
 
 Display DEBUG messages with stack trace, if $ENV{LM_DEBUG} is true.
+
+=item croakf(($message:Str|$format:Str,@list:Array));
+
+die with formatted $message
+
+  croakf("critical error");
+  # 2011-06-10T16:27:26 [ERROR] critical error at sample.pl line 23
+
+=item croakff(($message:Str|$format:Str,@list:Array));
+
+die with formatted $message with stack trace
 
 =item ddf($value:Any)
 
