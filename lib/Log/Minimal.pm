@@ -3,8 +3,9 @@ package Log::Minimal;
 use strict;
 use warnings;
 use base qw/Exporter/;
+use Term::ANSIColor qw//;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug croak/;
 push @EXPORT, 'ddf';
 
@@ -18,10 +19,31 @@ our $DIE = sub {
     die "$time [$type] $message at $trace\n";
 };
 
+our $DEFAULT_COLOR = {
+    info  => { text => 'green', },
+    debug => {
+        text       => 'red',
+        background => 'white',
+    },
+    'warn' => {
+        text       => 'black',
+        background => 'yellow',
+    },
+    'critical' => {
+        text       => 'black',
+        background => 'red'
+    },
+    'error' => {
+        text       => 'red',
+        background => 'black'
+    }
+};
+
 our $ENV_DEBUG = "LM_DEBUG";
 our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
 our $TRACE_LEVEL = 0;
+our $COLOR = 0;
 
 my %log_level_map = (
     DEBUG    => 1,
@@ -117,6 +139,15 @@ sub _log {
     $messages =~ s/\x0d/\\r/g;
     $messages =~ s/\x0a/\\n/g;
     $messages =~ s/\x09/\\t/g;
+
+    if ( $COLOR ) {
+        $messages = Term::ANSIColor::color($DEFAULT_COLOR->{lc($tag)}->{text}) 
+            . $messages . Term::ANSIColor::color("reset")
+                if $DEFAULT_COLOR->{lc($tag)}->{text};
+        $messages = Term::ANSIColor::color("on_".$DEFAULT_COLOR->{lc($tag)}->{background}) 
+            . $messages . Term::ANSIColor::color("reset")
+                if $DEFAULT_COLOR->{lc($tag)}->{background};
+    }
 
     $PRINT->(
         $time,
@@ -293,6 +324,10 @@ To print debugf and debugff messages, $ENV{LM_DEBUG} must be true.
 =head1 CUSTOMIZE
 
 =over 4
+
+=item $Log::Minimal::COLOR
+
+Coloring log messages. Disabled by default.
 
 =item $Log::Minimal::PRINT
 

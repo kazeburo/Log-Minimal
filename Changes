@@ -1,5 +1,9 @@
 Revision history for Perl extension Log::Minimal
 
+0.07    Fri Jun 10 17:10:03 2011
+        - colorful log
+	- added croakf and croakff
+
 0.06    Mon May 9 16:55:15 2011
         - force stringify message
 
