@@ -13,6 +13,11 @@ our $PRINT = sub {
     warn "$time [$type] $message at $trace\n";
 };
 
+our $DIE = sub {
+    my ( $time, $type, $message, $trace) = @_;
+    die "$time [$type] $message at $trace\n";
+};
+
 our $ENV_DEBUG = "LM_DEBUG";
 our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
@@ -62,18 +67,12 @@ sub debugff {
 }
 
 sub croakf {
-    local $PRINT = sub {
-        my ( $time, $type, $message, $trace) = @_;
-        die "$time [$type] $message at $trace\n";
-    };  
+    local $PRINT = $DIE;
     _log( "ERROR", 0, @_ );
 }
 
 sub croakff {
-    local $PRINT = sub {
-        my ( $time, $type, $message, $trace) = @_;
-        die "$time [$type] $message at $trace\n";
-    };
+    local $PRINT = $DIE;
     _log( "ERROR", 1, @_ );
 }
 
@@ -315,6 +314,22 @@ default is
   sub {
     my ( $time, $type, $message, $trace) = @_;
     warn "$time [$type] $message at $trace\n";
+  }
+
+=item $Log::Minimal::DIE
+
+To change the format of die message, set $Log::Minimal::DIE.
+
+  local $Log::Minimal::PRINT = sub {
+      my ( $time, $type, $message, $trace) = @_;
+      die "[$type] $message at $trace\n"; # not need time
+  };
+
+default is
+
+  sub {
+    my ( $time, $type, $message, $trace) = @_;
+    die "$time [$type] $message at $trace\n";
   }
 
 =item $Log::Minimal::LOG_LEVEL
