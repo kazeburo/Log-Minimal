@@ -5,17 +5,17 @@ use warnings;
 use base qw/Exporter/;
 use Term::ANSIColor qw//;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug croak/;
 push @EXPORT, 'ddf';
 
 our $PRINT = sub {
-    my ( $time, $type, $message, $trace) = @_;
+    my ( $time, $type, $message, $trace, $raw_message) = @_;
     warn "$time [$type] $message at $trace\n";
 };
 
 our $DIE = sub {
-    my ( $time, $type, $message, $trace) = @_;
+    my ( $time, $type, $message, $trace, $raw_message) = @_;
     die "$time [$type] $message at $trace\n";
 };
 
@@ -140,6 +140,7 @@ sub _log {
     $messages =~ s/\x0a/\\n/g;
     $messages =~ s/\x09/\\t/g;
 
+    my $raw_message = $messages;
     if ( $COLOR ) {
         $messages = Term::ANSIColor::color($DEFAULT_COLOR->{lc($tag)}->{text}) 
             . $messages . Term::ANSIColor::color("reset")
@@ -153,7 +154,8 @@ sub _log {
         $time,
         $tag,
         $messages,
-        $trace
+        $trace,
+        $raw_message
     );
 }
 
@@ -337,17 +339,18 @@ To change the method of outputting the log, set $Log::Minimal::PRINT.
   my $app = sub {
       my $env = shift;
       local $Log::Minimal::PRINT = sub {
-          my ( $time, $type, $message, $trace) = @_;
+          my ( $time, $type, $message, $trace,$raw_message) = @_;
           $env->{psgi.errors}->print(
               "$time [$env->{SCRIPT_NAME}] [$type] $message at $trace\n");
       };
       run_app(...);
   }
 
+$message includes color sequences, If you want raw message text, use $raw_message.
 default is
 
   sub {
-    my ( $time, $type, $message, $trace) = @_;
+    my ( $time, $type, $message, $trace,$raw_message) = @_;
     warn "$time [$type] $message at $trace\n";
   }
 

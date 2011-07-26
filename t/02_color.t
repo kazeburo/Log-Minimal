@@ -13,6 +13,10 @@ eval {
 };
 like $@, qr/\e\[/;
 
+{
+    local $Log::Minimal::PRINT = sub { $_[4] };
+    unlike( warnf("foo"), qr/\e\[/);
+}
 
 done_testing;
 
