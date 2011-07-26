@@ -1,5 +1,8 @@
 Revision history for Perl extension Log::Minimal
 
+0.09    Tue Jul 26 13:29:49 2011
+        - added $raw_message for message text without color sequences
+
 0.08    Fri Jun 10 17:23:07 2011
         - no code changes
         - requires Term::ANSIColor
