@@ -43,7 +43,7 @@ our $ENV_DEBUG = "LM_DEBUG";
 our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
 our $TRACE_LEVEL = 0;
-our $COLOR = 0;
+our $COLOR = $ENV{LM_COLOR} || 0;
 
 my %log_level_map = (
     DEBUG    => 1,
