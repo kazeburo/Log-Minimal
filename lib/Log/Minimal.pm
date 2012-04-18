@@ -5,7 +5,7 @@ use warnings;
 use base qw/Exporter/;
 use Term::ANSIColor qw//;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 our @EXPORT = map { ($_.'f', $_.'ff') } qw/crit warn info debug croak/;
 push @EXPORT, 'ddf';
 

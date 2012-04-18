@@ -1,5 +1,8 @@
 Revision history for Perl extension Log::Minimal
 
+0.10    Wed Apr 18 11:28:19 2012
+        - added $ENV{LM_COLOR} for a default value of $Log::Minimal::COLOR
+
 0.09    Tue Jul 26 13:29:49 2011
         - added $raw_message for message text without color sequences
 
