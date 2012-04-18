@@ -318,10 +318,19 @@ Utility method that serializes given value with Data::Dumper;
 
 =back
 
-=head1 ENVIRONMENT
+=head1 ENVIRONMENT VALUE
+
+=over 4
+
+=item $ENV{LM_DEBUG}
 
 To print debugf and debugff messages, $ENV{LM_DEBUG} must be true.
 
+=item $ENV{LM_COLOR}
+
+$ENV{LM_COLOR} is used as default value of $Log::Minimal::COLOR
+
+=back
 
 =head1 CUSTOMIZE
 
@@ -410,6 +419,8 @@ Masahiro Nagano E<lt>kazeburo {at} gmail.comE<gt>
 =head1 THANKS TO
 
 Yuji Shimada (xaicron)
+
+Yoshihiro Sugi (sugyan)
 
 =head1 SEE ALSO
 
