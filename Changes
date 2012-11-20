@@ -1,5 +1,9 @@
 Revision history for Perl extension Log::Minimal
 
+0.12    Tue Nov 20 12:29:44 2012
+        - fixed test.
+          00_compile.t was failed if LM_DEBUG=1
+
 0.11    Mon Sep 10 10:27:19 2012
         - requires Test::More > 0.94
           t/03_color_by_env.t does not works with Test::More 0.94 (Thank you tokuhirom)
