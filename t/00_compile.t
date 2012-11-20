@@ -37,6 +37,8 @@ BEGIN { use_ok 'Log::Minimal' }
 
 use Log::Minimal;
 
+local $ENV{LM_DEBUG} = 0;
+
 {
     local $Log::Minimal::PRINT = sub { join(" ", @_) };
     like( critf("crit%d", 1), qr/crit1/ );
