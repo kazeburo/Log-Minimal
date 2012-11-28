@@ -39,6 +39,18 @@ our $DEFAULT_COLOR = {
     }
 };
 
+if ($ENV{LM_DEFAULT_COLOR}) {
+    # LEVEL=FG;BG:LEVEL=FG;BG:...
+    for my $level_color (split /:/, $ENV{LM_DEFAULT_COLOR}) {
+        my($level, $color) = split /=/, $level_color, 2;
+        my($fg, $bg)       = split /;/, $color, 2;
+        $Log::Minimal::DEFAULT_COLOR->{$level} = {
+            $fg ? (text       => $fg) : (),
+            $bg ? (background => $bg) : (),
+        };
+    }
+}
+
 our $ENV_DEBUG = "LM_DEBUG";
 our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
@@ -329,6 +341,16 @@ To print debugf and debugff messages, $ENV{LM_DEBUG} must be true.
 =item $ENV{LM_COLOR}
 
 $ENV{LM_COLOR} is used as default value of $Log::Minimal::COLOR
+
+=item $ENV{LM_DEFAULT_COLOR}
+
+$ENV{LM_DEFAULT_COLOR} is used as default value of $Log::Minimal::DEFAULT_COLOR
+
+Format of value is "LEVEL=FG;BG:LEVEL=FG;BG:...". "FG" and "BG" are optional.
+
+For example:
+
+  export LM_DEFAULT_COLOR=debug=red:info=;cyan:critical=yellow;red
 
 =back
 
