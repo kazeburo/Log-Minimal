@@ -17,4 +17,6 @@ debugff
 sugi
 yoshihiro
 sugyan
+BG
+FG
 

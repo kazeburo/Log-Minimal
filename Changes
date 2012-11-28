@@ -1,5 +1,9 @@
 Revision history for Perl extension Log::Minimal
 
+0.13    Wed Nov 28 23:21:55 2012
+        - Enable to override $Log::Minimal::DEFAULT_COLOR by $ENV{LM_DEFAULT_COLOR}
+          (Thank you hirose31)
+
 0.12    Tue Nov 20 12:29:44 2012
         - fixed test.
           00_compile.t was failed if LM_DEBUG=1
