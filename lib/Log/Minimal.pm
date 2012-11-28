@@ -350,7 +350,7 @@ Format of value is "LEVEL=FG;BG:LEVEL=FG;BG:...". "FG" and "BG" are optional.
 
 For example:
 
-  export LM_DEFAULT_COLOR=debug=red:info=;cyan:critical=yellow;red
+  export LM_DEFAULT_COLOR='debug=red:info=;cyan:critical=yellow;red'
 
 =back
 
