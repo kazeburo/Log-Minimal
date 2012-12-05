@@ -66,6 +66,27 @@ my %log_level_map = (
     ERROR    => 99,
 );
 
+sub import {
+    my $class = shift;
+    my %p = (
+        env_debug => $ENV_DEBUG,
+        @_);
+    no strict 'refs';
+
+    my $caller = caller(0);
+
+    for my $f (map { ($_.'f', $_.'ff') } qw/crit warn info croak/) {
+        *{"$caller\::$f"} = \&$f;
+    }
+    for my $f (map { ($_.'f', $_.'ff') } qw/debug/) {
+        *{"$caller\::$f"} = sub {
+            local $TRACE_LEVEL = 1;
+            local $ENV_DEBUG   = $p{env_debug};
+            $f->(@_);
+        };
+    }
+}
+
 sub critf {
     _log( "CRITICAL", 0, @_ );
 }
