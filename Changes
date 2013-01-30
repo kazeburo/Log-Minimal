@@ -1,5 +1,9 @@
 Revision history for Perl extension Log::Minimal
 
+0.14    Wed Jan 30 15:06:31 2013
+        - Enable to specify own ENV_DEBUG
+          (Thank you hirose31)
+
 0.13    Wed Nov 28 23:21:55 2012
         - Enable to override $Log::Minimal::DEFAULT_COLOR by $ENV{LM_DEFAULT_COLOR}
           (Thank you hirose31)
