@@ -41,13 +41,23 @@ use Log::Minimal;
     ok( ! Foo::bar("foo") );
 }
 
+{
+    eval {
+        Foo::foo('undefined subroutine');
+    };
+    ok($@);
+}
+
 done_testing();
 
 package Foo;
 
-use Log::Minimal env_debug => 'PM_DEBUG';
+use Log::Minimal env_debug => 'PM_DEBUG', 'debugf';
 
 sub bar {
     debugf("%s", join(' ', @_));
 }
 
+sub foo {
+    warnf("%s", join(' ', @_));
+}

@@ -2,7 +2,6 @@ package Log::Minimal;
 
 use strict;
 use warnings;
-use base qw/Exporter/;
 use Term::ANSIColor qw//;
 
 our $VERSION = '0.13';
@@ -69,22 +68,46 @@ my %log_level_map = (
 sub import {
     my $class   = shift;
     my $package = caller(0);
+    my @args = @_;
 
-    my %p = (
-        env_debug => $ENV_DEBUG,
-        @_);
+    my %want_export;
+    my $env_debug;
+    while ( my $arg = shift @args ) {
+        if ( $arg eq 'env_debug' ) {
+            $env_debug = shift @args;
+        }
+        else {
+            $want_export{$arg} = 1;
+        }
+    }
+
+    if ( ! keys %want_export ) {
+        #all
+        $want_export{$_} = 1 for @EXPORT;
+    }
 
     no strict 'refs';
     for my $f (grep !/^debug/, @EXPORT) {
-        *{"$package\::$f"} = \&$f;
+        if ( $want_export{$f} ) {
+            *{"$package\::$f"} = \&$f;
+        }
     }
+
     for my $f (map { ($_.'f', $_.'ff') } qw/debug/) {
-        *{"$package\::$f"} = sub {
-            local $TRACE_LEVEL = 1;
-            local $ENV_DEBUG   = $p{env_debug};
-            $f->(@_);
-        };
+        if ( $want_export{$f} ) {
+            if ( $env_debug ) {
+                *{"$package\::$f"} = sub {
+                    local $TRACE_LEVEL = $TRACE_LEVEL + 1;
+                    local $ENV_DEBUG   = $env_debug;
+                    $f->(@_);
+                };
+            }
+            else {
+                *{"$package\::$f"} = \&$f;
+            }
+        }
     }
+
 }
 
 sub critf {
