@@ -66,6 +66,27 @@ my %log_level_map = (
     ERROR    => 99,
 );
 
+sub import {
+    my $class   = shift;
+    my $package = caller(0);
+
+    my %p = (
+        env_debug => $ENV_DEBUG,
+        @_);
+
+    no strict 'refs';
+    for my $f (grep !/^debug/, @EXPORT) {
+        *{"$package\::$f"} = \&$f;
+    }
+    for my $f (map { ($_.'f', $_.'ff') } qw/debug/) {
+        *{"$package\::$f"} = sub {
+            local $TRACE_LEVEL = 1;
+            local $ENV_DEBUG   = $p{env_debug};
+            $f->(@_);
+        };
+    }
+}
+
 sub critf {
     _log( "CRITICAL", 0, @_ );
 }
@@ -337,6 +358,17 @@ Utility method that serializes given value with Data::Dumper;
 =item $ENV{LM_DEBUG}
 
 To print debugf and debugff messages, $ENV{LM_DEBUG} must be true.
+
+You can change variable name from LM_DEBUG to arbitrary string which is specified by "env_debug" in use line. Changed variable name affects only in package locally.
+
+  use Log::Minimal env_debug => 'FOO_DEBUG';
+  
+  $ENV{LM_DEBUG}  = 1;
+  $ENV{FOO_DEBUG} = 0;
+  debugf("hello"); # no output
+  
+  $ENV{FOO_DEBUG} = 1;
+  debugf("world"); # print message
 
 =item $ENV{LM_COLOR}
 
