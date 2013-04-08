@@ -1,5 +1,8 @@
 Revision history for Perl extension Log::Minimal
 
+0.15    Mon Apr 8 11:55:33 2013
+        - enable Data::Dumper::SortKeys for fixing hash order
+
 0.14    Wed Jan 30 15:06:31 2013
         - Enable to specify own ENV_DEBUG
           (Thank you hirose31)
