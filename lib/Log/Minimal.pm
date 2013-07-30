@@ -55,6 +55,7 @@ our $AUTODUMP = 0;
 our $LOG_LEVEL = 'DEBUG';
 our $TRACE_LEVEL = 0;
 our $COLOR = $ENV{LM_COLOR} || 0;
+our $ESCAPE_WHITESPACE = 1;
 
 my %log_level_map = (
     DEBUG    => 1,
@@ -192,9 +193,11 @@ sub _log {
         $messages = sprintf(shift, map { $AUTODUMP ? Log::Minimal::Dumper->new($_) : $_ } @_);
     }
 
-    $messages =~ s/\x0d/\\r/g;
-    $messages =~ s/\x0a/\\n/g;
-    $messages =~ s/\x09/\\t/g;
+    if ($ESCAPE_WHITESPACE) {
+        $messages =~ s/\x0d/\\r/g;
+        $messages =~ s/\x0a/\\n/g;
+        $messages =~ s/\x09/\\t/g;
+    }
 
     my $raw_message = $messages;
     if ( $COLOR ) {
@@ -486,6 +489,11 @@ Log::Minimal uses it instead of Data::Dumper.
 =item $Log::Minimal::TRACE_LEVEL
 
 Like a $Carp::CarpLevel, this variable determines how many additional call frames are to be skipped.
+Defaults to 0.
+
+=item $Log::Minimal::ESCAPE_WHITESPACE
+
+If this value is true, whitespace other than space will be represented as [\n\t\r].
 Defaults to 0.
 
 =back
