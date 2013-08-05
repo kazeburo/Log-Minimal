@@ -59,6 +59,12 @@ local $ENV{LM_DEBUG} = 0;
     like( debugff("debu\t\r\ng"), qr/debu\\t\\r\\ng/ );
 }
 
+{
+    local $Log::Minimal::PRINT = sub { join(" ", @_) };
+    local $Log::Minimal::ESCAPE_WHITESPACE = 0;
+    like( critf("debu\t\r\ng"), qr/debu\t\r\ng/ );
+}
+
 use t::LogTest;
 
 {
