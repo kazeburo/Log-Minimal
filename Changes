@@ -2,6 +2,11 @@ Revision history for Perl extension Log::Minimal
 
 {{$NEXT}}
 
+0.16 2013-08-05T02:36:22Z
+
+        - add $ESCAPE_WHITESPACE variable (Thank you xaicron)
+        - minil migrate
+
 0.15    Mon Apr 8 11:55:33 2013
         - enable Data::Dumper::SortKeys for fixing hash order
 
