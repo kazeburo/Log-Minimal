@@ -78,6 +78,7 @@ use t::LogTest;
 {
     like( ddf(\"foo"), qr/\\'foo'/ );
     like( ddf("foo\r\nbar"), qr/foo\r\nbar/ );
+    is( ddf({"a" => 1, "b" => 2}), "{'a' => 1,'b' => 2}" );
 
 
     local $Log::Minimal::PRINT = sub { join(" ", @_) };

@@ -267,7 +267,7 @@ sub dumper {
     if ( defined $value && ref($value) ) {
         local $Data::Dumper::Terse = 1;
         local $Data::Dumper::Indent = 0; 
-        local $Data::Dumper::SortKeys = 1; 
+        local $Data::Dumper::Sortkeys = 1;
         $value = Data::Dumper::Dumper($value);
     }
     $value;
