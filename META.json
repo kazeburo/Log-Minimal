@@ -4,7 +4,7 @@
       "Masahiro Nagano <kazeburo {at} gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.5.6, CPAN::Meta::Converter version 2.130880",
+   "generated_by" : "Minilla/v0.8.4, CPAN::Meta::Converter version 2.132830",
    "license" : [
       "perl_5"
    ],
@@ -21,7 +21,8 @@
          "share",
          "eg",
          "examples",
-         "author"
+         "author",
+         "builder"
       ]
    },
    "prereqs" : {
@@ -65,12 +66,13 @@
          "web" : "https://github.com/kazeburo/Log-Minimal"
       }
    },
-   "version" : "0.16",
+   "version" : "0.17",
    "x_contributors" : [
       "sugyan <sugi1982@gmail.com>",
       "tokuhirom <tokuhirom@gmail.com>",
       "HIROSE Masaaki <hirose31@gmail.com>",
       "xaicron <xaicron@gmail.com>",
+      "hisaichi5518 <hisaichi5518@gmail.com>",
       "Masahiro Nagano <kazeburo@gmail.com>"
    ]
 }
