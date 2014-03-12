@@ -2,6 +2,10 @@ Revision history for Perl extension Log::Minimal
 
 {{$NEXT}}
 
+0.18 2014-03-12T07:51:14Z
+
+        - bug fix. croakf and croakff did not die on log level = NONE
+
 0.17 2013-12-20T07:48:02Z
 
         - fix $Data::Dumper::{SortKeys => Sortkeys}
