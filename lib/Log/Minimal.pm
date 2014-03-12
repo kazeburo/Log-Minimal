@@ -147,11 +147,13 @@ sub debugff {
 
 sub croakf {
     local $PRINT = $DIE;
+    local $LOG_LEVEL = 'DEBUG';
     _log( "ERROR", 0, @_ );
 }
 
 sub croakff {
     local $PRINT = $DIE;
+    local $LOG_LEVEL = 'DEBUG';
     _log( "ERROR", 1, @_ );
 }
 

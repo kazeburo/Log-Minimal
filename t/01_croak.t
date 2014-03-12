@@ -13,5 +13,12 @@ eval {
 };
 like $@, qr/ERROR/;
 
+eval {
+    local $Log::Minimal::LOG_LEVEL='NONE';
+    croakff "foo";
+};
+like $@, qr/ERROR/;
+
+
 done_testing;
 
