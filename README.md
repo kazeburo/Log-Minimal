@@ -183,7 +183,7 @@ Log::Minimal is Minimal but customizable log module.
         warnf("foo");
 
     Support levels are DEBUG,INFO,WARN,CRITICAL and NONE.
-    If NONE is set, no output. Default log level is DEBUG.
+    If NONE is set, no output except croakf and croakff. Default log level is DEBUG.
 
 - $Log::Minimal::AUTODUMP
 
