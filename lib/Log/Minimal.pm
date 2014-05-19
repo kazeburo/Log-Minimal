@@ -180,7 +180,7 @@ sub _log {
             push @stack, "$caller[1] line $caller[2]";
             $i++;
         }
-        $trace = join " ,", @stack
+        $trace = join ", ", @stack
     }
     else {
         my @caller = caller($TRACE_LEVEL+1);
