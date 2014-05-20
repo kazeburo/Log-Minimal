@@ -2,6 +2,12 @@ Revision history for Perl extension Log::Minimal
 
 {{$NEXT}}
 
+0.19 2014-05-20T01:07:04Z
+
+        - Fix comma position of stack trace
+        - Fix documentation for autodump option
+          (Thank you moznion)
+
 0.18 2014-03-12T07:51:14Z
 
         - bug fix. croakf and croakff did not die on log level = NONE

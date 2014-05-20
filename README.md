@@ -189,7 +189,7 @@ Log::Minimal is Minimal but customizable log module.
 
     Serialize message with Data::Dumper.
 
-        warnf("%s",{ foo => bar}); # HASH(0x100804ed0)
+        warnf("%s", {foo => 'bar'}); # HASH(0x100804ed0)
 
         local $Log::Minimal::AUTODUMP = 1;
         warnf("dump is %s", {foo=>'bar'}); #dump is {foo=>'bar'}
